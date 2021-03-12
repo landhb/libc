@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - staging
 
 jobs:
   docker_linux_tier1:
@@ -17,6 +18,7 @@ jobs:
         target: [
           i686-unknown-linux-gnu,
           x86_64-unknown-linux-gnu,
+          x86_64-linux-android,
         ]
     steps:
       - uses: actions/checkout@v2
@@ -82,3 +84,4 @@ jobs:
         run: sh ./ci/install-rust.sh
       - name: Check style
         run: sh ci/style.sh
+
