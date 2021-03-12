@@ -258,7 +258,8 @@ fn test_apple(target: &str) {
             "FILE" | "DIR" | "Dl_info" => ty.to_string(),
 
             // OSX calls this something else
-            "sighandler_t" => "sig_t".to_string(),
+            // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L367
+            "sighandler_t" => "__sigaction_u".to_string(),
 
             t if is_union => format!("union {}", t),
             t if t.ends_with("_t") => t.to_string(),
