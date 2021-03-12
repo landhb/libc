@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - staging
 
 jobs:
   docker_linux_tier1:
