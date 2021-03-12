@@ -267,19 +267,11 @@ fn test_apple(target: &str) {
         }
     });
 
-    cfg.field_name(move |struct_, field| {
-        match field {
-            s if s.ends_with("_nsec") && struct_.starts_with("stat") => {
-                s.replace("e_nsec", "espec.tv_nsec")
-            }
-            // FIXME: sigaction actually contains a union with two variants:
-            // a sa_sigaction with type: (*)(int, struct __siginfo *, void *)
-            // a sa_handler with type sig_t
-            "sa_sigaction" if struct_ == "sigaction" => {
-                "sa_handler".to_string()
-            }
-            s => s.to_string(),
+    cfg.field_name(move |struct_, field| match field {
+        s if s.ends_with("_nsec") && struct_.starts_with("stat") => {
+            s.replace("e_nsec", "espec.tv_nsec")
         }
+        s => s.to_string(),
     });
 
     cfg.skip_roundtrip(move |s| match s {
@@ -1484,13 +1476,8 @@ fn test_android(target: &str) {
         }
     });
 
-    cfg.skip_type(move |ty| {
-        match ty {
-            // FIXME: `sighandler_t` type is incorrect, see:
-            // https://github.com/rust-lang/libc/issues/1359
-            "sighandler_t" => true,
-            _ => false,
-        }
+    cfg.skip_type(move |ty| match ty {
+        _ => false,
     });
 
     cfg.skip_struct(move |ty| {
@@ -2495,10 +2482,6 @@ fn test_linux(target: &str) {
 
     cfg.skip_type(move |ty| {
         match ty {
-            // FIXME: `sighandler_t` type is incorrect, see:
-            // https://github.com/rust-lang/libc/issues/1359
-            "sighandler_t" => true,
-
             // These cannot be tested when "resolv.h" is included and are tested
             // in the `linux_elf.rs` file.
             "Elf64_Phdr" | "Elf32_Phdr" => true,
