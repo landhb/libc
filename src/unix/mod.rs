@@ -27,22 +27,16 @@ pub type uid_t = u32;
 pub type gid_t = u32;
 pub type in_addr_t = u32;
 pub type in_port_t = u16;
+pub type sighandler_t = __c_anonymous_sigaction_handler;
 pub type cc_t = ::c_uchar;
 
-#[cfg(not(any(
-    target_os = "macos",
-    target_os = "ios",
-    target_os = "netbsd",
-    target_os = "openbsd"
-)))]
-pub type sighandler_t = __c_anonymous_sigaction_handler;
 #[cfg(any(
     target_os = "macos",
     target_os = "ios",
     target_os = "netbsd",
     target_os = "openbsd"
 ))]
-pub type sig_t = __c_anonymous_sigaction_handler;
+pub type sig_t = sighandler_t;
 
 #[cfg_attr(feature = "extra_traits", derive(Debug))]
 pub enum DIR {}
