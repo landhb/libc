@@ -261,10 +261,10 @@ fn test_apple(target: &str) {
             // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L500
             "sighandler_t" => "sig_t".to_string(),
 
-            // when used as a type, consider this to be a sighandler_t
+            // when used as a type, consider this to be a sig_t
             // this allows the values of SIG_IGN, SIG_DFL, and SIG_ERR to be tested
             // the rust compiler doesn't like fn pointers with a value of 1 or !0
-            "__c_anonymous_sigaction_handler" => "sighandler_t".to_string(),
+            "__c_anonymous_sigaction_handler" => "sig_t".to_string(),
 
             t if is_union => format!("union {}", t),
             t if t.ends_with("_t") => t.to_string(),
@@ -2511,9 +2511,6 @@ fn test_linux(target: &str) {
             return true;
         }
         match ty {
-            // this is used internally in glibc and this crate
-            "__sigaction_handler" => true,
-
             // These cannot be tested when "resolv.h" is included and are tested
             // in the `linux_elf.rs` file.
             "Elf64_Phdr" | "Elf32_Phdr" => true,
