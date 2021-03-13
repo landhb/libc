@@ -258,8 +258,13 @@ fn test_apple(target: &str) {
             "FILE" | "DIR" | "Dl_info" => ty.to_string(),
 
             // OSX calls this something else
-            // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L367
-            "sighandler_t" => "__sigaction_u".to_string(),
+            // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L500
+            "sighandler_t" => "sig_t".to_string(),
+
+            // when used as a type, consider this to be a sighandler_t
+            // this allows the values of SIG_IGN, SIG_DFL, and SIG_ERR to be tested
+            // the rust compiler doesn't like fn pointers with a value of 1 or !0
+            "__c_anonymous_sigaction_handler" => "sighandler_t".to_string(),
 
             t if is_union => format!("union {}", t),
             t if t.ends_with("_t") => t.to_string(),
@@ -2441,6 +2446,11 @@ fn test_linux(target: &str) {
             | "Elf64_Sym" | "Elf32_Ehdr" | "Elf64_Ehdr" | "Elf32_Chdr"
             | "Elf64_Chdr" => ty.to_string(),
 
+            // when used as a type, consider this to be a sighandler_t
+            // this allows the values of SIG_IGN, SIG_DFL, and SIG_ERR to be tested
+            // the rust compiler doesn't like fn pointers with a value of 1 or !0
+            "__c_anonymous_sigaction_handler" => "sighandler_t".to_string(),
+
             t if is_union => format!("union {}", t),
 
             t if t.ends_with("_t") => t.to_string(),
@@ -2501,6 +2511,9 @@ fn test_linux(target: &str) {
             return true;
         }
         match ty {
+            // this is used internally in glibc and this crate
+            "__sigaction_handler" => true,
+
             // These cannot be tested when "resolv.h" is included and are tested
             // in the `linux_elf.rs` file.
             "Elf64_Phdr" | "Elf32_Phdr" => true,

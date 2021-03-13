@@ -27,7 +27,7 @@ pub type uid_t = u32;
 pub type gid_t = u32;
 pub type in_addr_t = u32;
 pub type in_port_t = u16;
-pub type sighandler_t = __c_anonymous_sigaction_handler;
+pub type sighandler_t = Option<extern "C" fn(i32)>;
 pub type cc_t = ::c_uchar;
 
 #[cfg(any(
@@ -244,9 +244,12 @@ cfg_if! {
 pub const INT_MIN: c_int = -2147483648;
 pub const INT_MAX: c_int = 2147483647;
 
-pub const SIG_DFL: sighandler_t = sighandler_t { default: 0 };
-pub const SIG_IGN: sighandler_t = sighandler_t { default: 1 };
-pub const SIG_ERR: sighandler_t = sighandler_t { default: !0 };
+pub const SIG_DFL: __c_anonymous_sigaction_handler =
+    __c_anonymous_sigaction_handler { default: 0 };
+pub const SIG_IGN: __c_anonymous_sigaction_handler =
+    __c_anonymous_sigaction_handler { default: 1 };
+pub const SIG_ERR: __c_anonymous_sigaction_handler =
+    __c_anonymous_sigaction_handler { default: !0 };
 
 pub const DT_UNKNOWN: u8 = 0;
 pub const DT_FIFO: u8 = 1;
