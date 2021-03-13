@@ -261,10 +261,11 @@ fn test_apple(target: &str) {
             // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L500
             "sighandler_t" => "sig_t".to_string(),
 
-            // when used as a type, consider this to be a sig_t
-            // this allows the values of SIG_IGN, SIG_DFL, and SIG_ERR to be tested
-            // the rust compiler doesn't like fn pointers with a value of 1 or !0
-            "__c_anonymous_sigaction_handler" => "sig_t".to_string(),
+            // when used as a type, consider this to be `union __sigaction_u`
+            // https://github.com/apple/darwin-xnu/blob/main/bsd/sys/signal.h#L367
+            "__c_anonymous_sigaction_handler" => {
+                "union __sigaction_u".to_string()
+            }
 
             t if is_union => format!("union {}", t),
             t if t.ends_with("_t") => t.to_string(),
