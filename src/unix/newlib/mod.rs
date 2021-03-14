@@ -155,7 +155,7 @@ s! {
     }
 
     pub struct sigaction {
-        pub sa_handler: extern fn(arg1: ::c_int),
+        pub sa_handler: ::sighandler_t,
         pub sa_mask: sigset_t,
         pub sa_flags: ::c_int,
     }

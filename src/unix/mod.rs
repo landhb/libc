@@ -51,14 +51,11 @@ pub type locale_t = *mut ::c_void;
 s_no_extra_traits! {
     pub union __c_anonymous_sigaction_handler {
         pub sa_handler: Option<extern "C" fn(c_int) -> ()>,
-
-        #[cfg(not(any(target_os = "redox")))]
         pub sa_sigaction: Option<extern "C" fn(
             c_int,
             *mut siginfo_t,
             *mut c_void
         ) -> ()>,
-
         pub default: size_t,
     }
 }

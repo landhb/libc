@@ -160,7 +160,6 @@ s! {
     }
 
     pub struct sigaction {
-        // FIXME: this field is actually a union
         pub sa_sigaction: ::__c_anonymous_sigaction_handler,
         pub sa_mask: sigset_t,
         pub sa_flags: ::c_int,

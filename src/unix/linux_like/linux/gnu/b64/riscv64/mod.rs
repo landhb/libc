@@ -143,7 +143,7 @@ s! {
     }
 
     pub struct sigaction {
-        pub sa_sigaction: ::sighandler_t,
+        pub sa_sigaction: ::__c_anonymous_sigaction_handler,
         pub sa_mask: ::sigset_t,
         pub sa_flags: ::c_int,
         pub sa_restorer: ::Option<unsafe extern "C" fn()>,
