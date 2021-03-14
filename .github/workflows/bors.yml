@@ -5,6 +5,7 @@ on:
     branches:
       - auto-libc
       - try
+      - master
 
 jobs:
   docker_linux_tier1:
